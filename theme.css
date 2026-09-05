@@ -1,0 +1,213 @@
+/* =====================================================================
+   FOCUS — Direction A « AFFICHE »
+   Franc, graphique, façon affiche suisse : aplats de couleur, contours
+   d'encre fins, pas d'ombre, typographie grotesque serrée, filets.
+   À charger APRÈS le <style> d'index.html. CSS seulement.
+   Polices : Space Grotesk (titres, étiquettes) + Inter (texte).
+   Alternative système sans téléchargement : -apple-system (SF Pro) avec
+   les mêmes tailles et interlettrages (voir stack de secours ci-dessous).
+   ===================================================================== */
+@font-face{font-family:"Space Grotesk";src:url(fonts/SpaceGrotesk.woff) format("woff");font-weight:300 700;font-display:swap}
+
+:root{
+  --bg:#F3F0E8; --card:#FFFFFF; --text:#3B3F2A; --ink:#3B3F2A; --paper:#F3F0E8;
+  --muted:#5F6252; --line:#DAD6CB; --hi:#7CB518; --ontag:#FFFFFF; --ok:#7CB518;
+  --q1:#F0553D; --q1s:#FDE4E0;   /* Prioritaire : corail */
+  --q2:#9ACD1E; --q2s:#EFF7DB;   /* Important : citron vert */
+  --q3:#F5B301; --q3s:#FDF3D6;   /* Urgent : jaune soleil */
+  --q4:#3B6FA8; --q4s:#E0E8F1;   /* Affaires courantes : denim */
+  --wait:#3AA0F5; --waits:#DFF0FD; /* En attente : bleu ciel */
+  --client:#5E6142;        /* client : kaki du logo Azimut */
+  --accent:#3B3F2A; --accent-soft:#E8E6E0; --danger:#F0553D;
+  --shadow:none; --radius:10px; --stroke:1.5px;
+  --display:"Space Grotesk","SF Pro Display",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#121214; --card:#1B1B1F; --text:#F3F0E8; --ink:#C9CBBD; --paper:#121214;
+    --muted:#A6A49D; --line:#2F2F35; --hi:#9ACD1E; --ontag:#15151A; --ok:#7CB518;
+    --q1:#F48877; --q1s:#3A2622; --q2:#B8DC62; --q2s:#28321A; --q3:#F8CA4D; --q3s:#3A3116;
+    --q4:#769AC2; --q4s:#1E2A38; --wait:#75BCF8; --waits:#1C2F40; --client:#B9BBA8;
+    --accent:#C9CBBD; --accent-soft:#2A2A2E; --danger:#F48877;
+  }
+  .overlay{background:rgba(0,0,0,.65)}
+}
+
+/* ---------- base & typo ---------- */
+html,body{font-family:var(--body);background:var(--bg);color:var(--text)}
+h1{font-family:var(--display);font-weight:700;font-size:2.125rem;letter-spacing:-.035em;line-height:1}
+.sub{font-family:var(--display);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:6px}
+header{padding-bottom:10px;align-items:flex-end}
+.sec{margin:18px 0 8px;padding-bottom:6px;border-bottom:var(--stroke) solid var(--ink);align-items:baseline}
+.sec h2{font-family:var(--display);font-weight:700;font-size:.75rem;letter-spacing:.12em;color:var(--ink)}
+.sec span{font-family:var(--display);font-weight:700;font-size:.75rem;color:var(--muted)}
+.empty{font-family:var(--body)}
+
+/* ---------- pastilles de filtre ---------- */
+.pills{gap:6px;margin:10px 0 6px}
+.pill{font-family:var(--display);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;
+  padding:9px 12px;border-radius:7px;border:var(--stroke) solid var(--ink);color:var(--ink);background:transparent;min-height:36px}
+.pill.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pill.cl{border-color:var(--client);color:var(--client)}
+.pill.cl.on{background:var(--client);border-color:var(--client);color:var(--ontag)}
+
+/* ---------- bandeaux ---------- */
+.banner{border-radius:7px;border:var(--stroke) solid currentColor;font-family:var(--display);font-weight:600;letter-spacing:.01em}
+.banner.blue{background:var(--card);color:var(--ink)}
+
+/* ---------- saisie rapide & recherche ---------- */
+.qa,.search{box-shadow:none;border:var(--stroke) solid var(--ink);border-radius:var(--radius);background:var(--card)}
+.qa .ib{border-radius:7px}
+.qa .ib.go{background:var(--ink);color:var(--paper)}
+.qa .ib.mic.on{background:var(--q1);color:var(--ontag)}
+.qa .prev span{border-radius:4px;font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:.6875rem}
+.qa .prev span.tt{background:var(--ink);color:var(--paper);text-transform:none;letter-spacing:0;font-family:var(--body)}
+.qa .prev span.u{background:var(--q3);color:var(--ontag)}.qa .prev span.i{background:var(--q2);color:var(--ontag)}
+.qa .prev span.w{background:var(--wait);color:var(--ontag)}.qa .prev span.d{background:var(--q1);color:var(--ontag)}
+.qa .prev button{color:var(--ink);text-decoration:underline}
+
+
+/* ---------- CARTE DE TÂCHE ----------
+   Plus de bande à gauche : le quadrant est porté par la case à cocher
+   (carré plein de la couleur) et par l'étiquette pleine. Contour d'encre,
+   aucune ombre. */
+.sw-wrap{border-radius:var(--radius);margin-bottom:8px}
+.sw-bg{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;color:#fff}
+.sw-bg .r{background:var(--ok)}.sw-bg .l{background:var(--q2)}
+.task{border:var(--stroke) solid var(--ink);border-left:var(--stroke) solid var(--ink);border-radius:var(--radius);box-shadow:none;padding:12px 14px 12px 12px;gap:12px;align-items:flex-start}
+.task.waiting{border-left-color:var(--ink);--qc:var(--wait)!important;--qs:var(--waits)!important}
+.chk{margin:-8px -6px -8px -10px}
+.chk i{width:26px;height:26px;border-radius:6px;border:2.5px solid var(--qc);background:var(--qs);color:var(--ontag);transition:background .15s}
+.task.done .chk i{background:var(--qc);border-color:var(--qc)}
+.task.done .chk svg{color:var(--ontag)}
+.chk svg{width:15px;height:15px}
+.t{font-family:var(--body);font-weight:600;font-size:1.0625rem;line-height:1.25;letter-spacing:-.012em}
+.task.done{opacity:1;background:transparent;border-color:var(--line)}
+.task.done .t{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1.5px}
+.meta{margin-top:7px;gap:5px 8px;font-family:var(--display);font-size:.75rem;font-weight:500;color:var(--muted);letter-spacing:.01em}
+.tag{font-family:var(--display);font-weight:700;font-size:.6563rem;text-transform:uppercase;letter-spacing:.07em;padding:3px 7px;border-radius:4px;line-height:1.3}
+.tag.q{background:var(--qc);color:var(--ontag)}
+.tag.cl{background:transparent;border:var(--stroke) solid var(--client);color:var(--client);padding:2px 6px}
+.tag.ctx{background:transparent;border:var(--stroke) solid var(--line);color:var(--muted)}
+.tag.due,.tag.late{background:var(--q1);color:var(--ontag)}
+.tag.due.far{background:transparent;border:var(--stroke) solid var(--muted);color:var(--muted)}
+.tag.w{background:var(--wait);color:var(--ontag)}
+.tag.ov{background:transparent;color:var(--q1);border:var(--stroke) solid var(--q1)}
+.subp{height:5px;border-radius:0;background:var(--line);margin-top:8px}
+
+/* ---------- matrice ---------- */
+.quad{border:var(--stroke) solid var(--ink);border-top:8px solid var(--qc);border-radius:var(--radius);box-shadow:none}
+.quad h3{font-family:var(--display);font-weight:700;letter-spacing:-.01em;color:var(--qc)}
+.quad p{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.6563rem}
+.quad .mini{border-radius:5px;background:var(--qs);color:var(--text)}
+
+/* ---------- boutons ---------- */
+.btn{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:8px;background:var(--ink);color:var(--paper)}
+.btn.ghost{background:transparent;border:var(--stroke) solid var(--ink);color:var(--ink)}
+.btn.red{background:var(--q1);color:#fff}
+.btn.sm{border-radius:7px;padding:8px 12px}
+.btn.big{border-radius:var(--radius)}
+.tri-btns .btn{border-radius:8px}
+
+/* ---------- réglages ---------- */
+.card{border:var(--stroke) solid var(--ink);border-radius:var(--radius);box-shadow:none}
+.card .item label{font-family:var(--display);font-weight:600}
+.tbl th{font-family:var(--display);letter-spacing:.1em}
+.help code{background:var(--bg);border:1px solid var(--line);border-radius:4px}
+
+/* ---------- barre d'onglets ---------- */
+nav{background:var(--card);border-top:2px solid var(--ink);padding-top:8px}
+nav button{width:auto;flex:1;min-width:0;font-family:var(--display);font-size:.625rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);gap:3px;min-height:44px}
+nav button.on{color:var(--ink)}
+nav button.on::before{content:"";position:absolute;top:-10px;left:50%;width:44px;margin-left:-22px;height:4px;background:var(--hi)}
+nav svg{width:25px;height:25px}
+nav svg .f{opacity:0}
+nav button.on svg .f{opacity:.2}
+nav .dot{background:var(--q1);right:16px;top:0;width:9px;height:9px;border:2px solid var(--card)}
+
+/* ---------- feuilles (fiche, tri) ---------- */
+.sheet{border-radius:14px 14px 0 0;border-top:2px solid var(--ink);background:var(--bg)}
+.grip{background:var(--ink);opacity:.35}
+.sheet .top button{font-family:var(--display);font-weight:600;color:var(--ink);text-transform:uppercase;letter-spacing:.06em;font-size:.8125rem}
+.sheet .top .ttl{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:.75rem}
+.f-title{font-family:var(--display);font-weight:700;font-size:1.375rem;letter-spacing:-.025em;padding:10px 0}
+.grp{border:var(--stroke) solid var(--ink);border-radius:var(--radius);background:var(--card)}
+.grp .r{border-bottom:1px solid var(--line)}
+.grp .r label{font-family:var(--display);font-weight:600}
+.grp input[type=date],.grp input[type=time],.grp input[type=number],.grp input[type=text]{border-radius:6px;border:var(--stroke) solid var(--line);background:var(--bg)}
+.sw{border-radius:15px;background:var(--line)}
+.sw::after{box-shadow:none}
+.seg{background:transparent;border:var(--stroke) solid var(--ink);border-radius:7px;padding:2px}
+.seg button{border-radius:4px;font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.75rem}
+.seg button.on{background:var(--ink);color:var(--paper);box-shadow:none}
+.chip{border:var(--stroke) solid var(--line);background:transparent;border-radius:6px;font-family:var(--display);color:var(--text);min-height:36px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.chips input{border:var(--stroke) solid var(--line);border-radius:6px;background:transparent}
+.qhint{border-radius:6px;background:var(--qc);color:var(--ontag);font-family:var(--display);font-weight:600;letter-spacing:.01em}
+.subrow .c{border-color:var(--ink)}
+.subrow .c.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.addsub{color:var(--ink);font-family:var(--display);font-weight:600}
+.f-notes{border:var(--stroke) solid var(--ink);border-radius:var(--radius);background:var(--card)}
+.dangerzone button{color:var(--q1);font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.75rem}
+.tri-card{border:var(--stroke) solid var(--ink);border-left:var(--stroke) solid var(--ink);border-top:8px solid var(--qc);border-radius:var(--radius);box-shadow:none}
+.tri-card .t{font-family:var(--display);font-weight:700;letter-spacing:-.02em}
+.toast{background:var(--ink);color:var(--paper);border-radius:8px;font-family:var(--display);box-shadow:none}
+.toast button{color:var(--hi)}
+
+/* tâches terminées : carte opaque, texte atténué, pas de fond de glissement visible */
+.task.done{opacity:1;background:var(--card)}
+.task.done .t,.task.done .meta,.task.done .subp{opacity:.5}
+.sw-wrap:has(.task.done) .sw-bg{display:none}
+
+/* ---------- palette C9 : texte encre sur les étiquettes claires ---------- */
+.task[style*="--q1)"] .tag.q,.tri-card[style*="--q1)"] .tag.q,.quad[style*="--q1)"] h3,.qhint[style*="--q1)"],
+.task[style*="--q2)"] .tag.q,.tri-card[style*="--q2)"] .tag.q,.quad[style*="--q2)"] h3,.qhint[style*="--q2)"],
+.task[style*="--q3)"] .tag.q,.tri-card[style*="--q3)"] .tag.q,.quad[style*="--q3)"] h3,.qhint[style*="--q3)"],
+.tag.w,.qa .prev span.w,.qa .prev span.u,.qa .prev span.i,.qa .prev span.d,.tag.due,.tag.late,.btn.red,.sw-bg span,.qa .ib.mic.on{color:#15151A}
+/* texte quasi-noir (#15151A) sur corail, citron, jaune, bleu ciel : ≥ 4,5:1 sans changer les couleurs */
+.task[style*="--q1)"] .tag.q,.tri-card[style*="--q1)"] .tag.q,.qhint[style*="--q1)"],.task[style*="--q2)"] .tag.q,.tri-card[style*="--q2)"] .tag.q,.qhint[style*="--q2)"],
+.task[style*="--q3)"] .tag.q,.tri-card[style*="--q3)"] .tag.q,.qhint[style*="--q3)"]{color:#15151A}
+/* titres de quadrant dans la Matrice et le sélecteur : texte encre, la couleur passe par la bordure/pastille */
+.quad[style*="--q1)"] h3,.quad[style*="--q2)"] h3,.quad[style*="--q3)"] h3,.quad[style*="--q4)"] h3{color:var(--text)}
+.quad h3::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--qc);margin-right:8px;vertical-align:-1px}
+/* bandeaux : texte encre sur fond pâle */
+.banner{color:var(--ink);background:var(--q3s);border-color:var(--q3)}
+.banner.blue{background:var(--card);border-color:var(--ink)}
+/* sélecteur d'appui long : texte encre + pastille de couleur */
+.qpick{border:var(--stroke) solid var(--ink);border-radius:var(--radius);box-shadow:none}
+.qpick h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;color:var(--ink)}
+.qpick button{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.75rem;color:var(--text)!important;border-radius:8px;position:relative;padding-left:26px}
+.qpick button::before{content:"";position:absolute;left:10px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:3px;background:currentColor}
+.qpick button[data-q="1"]::before{background:var(--q1)}.qpick button[data-q="2"]::before{background:var(--q2)}.qpick button[data-q="3"]::before{background:var(--q3)}.qpick button[data-q="4"]::before{background:var(--q4)}.qpick button[data-q="wait"]::before{background:var(--wait)}
+.qpick button.cur{border-color:var(--ink)}
+
+@media (prefers-color-scheme: dark){
+  .task[style*="--q1)"] .tag.q,.tri-card[style*="--q1)"] .tag.q,.qhint[style*="--q1)"],.task[style*="--q2)"] .tag.q,.tri-card[style*="--q2)"] .tag.q,.qhint[style*="--q2)"],
+  .task[style*="--q3)"] .tag.q,.tri-card[style*="--q3)"] .tag.q,.qhint[style*="--q3)"],.tag.w,.qa .prev span.w,.qa .prev span.u,.qa .prev span.i,.qa .prev span.d,.tag.due,.tag.late,.btn.red,.sw-bg span{color:#15151A}
+  .task.done .chk svg{color:#15151A}
+}
+.task.done .chk svg{color:var(--ink)}
+/* tâches terminées : carte opaque, texte atténué, pas de fond de glissement visible */
+.task.done{opacity:1;background:var(--card)}
+.task.done .t,.task.done .meta,.task.done .subp{opacity:.5}
+.sw-wrap:has(.task.done) .sw-bg{display:none}
+/* interrupteurs : Important = À planifier, Urgent = Prioritaire */
+#e-imp.on{background:var(--q2)!important}#e-urg.on{background:var(--q1)!important}#e-wait.on{background:var(--wait)!important}
+
+/* v5 : compteur du tri */
+#t-cap{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:.75rem;color:var(--muted)}
+
+/* v6 : sujets */
+.subj .ttl,.subj .ttl small,.subj .rubs span{font-family:var(--display)}
+.sec.fold h2::before{font-family:var(--body)}
+.sec .plus{color:var(--ink)}
+/* v7 : « Tu avais noté… », question « quand ? », retour */
+.memo{border-color:var(--ink);border-left:8px solid var(--q2)}
+.memo .mt{font-family:var(--display);color:var(--ink)}
+.memo .body-t{font-family:var(--body)}
+.memo .row .btn{font-size:.6875rem;padding:8px 4px}
+.qa .ask .q{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.6875rem;color:var(--ink)}
+.qa .ask .btn{border-color:var(--line)}
+header .back{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;color:var(--ink)}
+#s-lastexp{font-family:var(--body)}
