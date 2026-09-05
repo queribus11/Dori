@@ -1,6 +1,6 @@
 # Dori – installer l'app sur votre iPhone
 
-*Dori est le nouveau nom de Focus (même app, mêmes fichiers). Votre adresse : https://queribus11.github.io/dori/*
+*Dori est le nouveau nom de Focus (même app, mêmes fichiers). Votre adresse : **https://queribus11.github.io/Dori/** (le D majuscule compte : le dépôt s'appelle « Dori »).*
 
 Il faut publier ces fichiers sur une adresse web (gratuit, une seule fois), puis ajouter la page à l'écran d'accueil de l'iPhone. Ensuite l'app fonctionne plein écran, avec son icône, même sans réseau.
 
@@ -21,7 +21,7 @@ Il faut publier ces fichiers sur une adresse web (gratuit, une seule fois), puis
 1. Dans le dépôt, onglet **Settings** (en haut), puis **Pages** dans le menu de gauche.
 2. Sous *Build and deployment* → *Branch* : choisissez **main**, laissez `/ (root)`, cliquez **Save**.
 3. Attendez environ une minute, rechargez la page : une adresse apparaît, de la forme
-   `https://queribus11.github.io/dori/`
+   `https://queribus11.github.io/Dori/`
 
 ## 4. Sur l'iPhone (1 min)
 
@@ -110,14 +110,20 @@ Permet de dire « Dis Siri, nouvelle tâche Dori », de dicter la phrase, et de 
 1. **+** → nommez le raccourci `Nouvelle tâche Dori` (c'est la phrase à dire à Siri).
 2. Ajoutez l'action **Dicter du texte** (langue : Français ; arrêt : après une pause).
 3. Ajoutez l'action **Copier dans le presse-papiers** (avec la variable *Texte dicté*).
-4. Ajoutez l'action **Ouvrir l'app** et choisissez **Dori** (les apps de l'écran d'accueil sont proposées dans la liste sur les iOS récents ; si Dori n'y est pas, remplacez par **Ouvrir des URL** avec `https://queribus11.github.io/dori/`).
+4. Ajoutez l'action **Ouvrir l'app** et choisissez **Dori** (les apps de l'écran d'accueil sont proposées dans la liste sur les iOS récents ; si Dori n'y est pas, remplacez par **Ouvrir des URL** avec `https://queribus11.github.io/Dori/`).
 5. Fin. Testez : « Dis Siri, nouvelle tâche Dori » → dictez → Dori s'ouvre → appuyez sur le bouton **coller** de la barre de saisie : la phrase s'interprète, un aperçu s'affiche, validez. La première fois, l'iPhone demande « Autoriser le collage ? » : oui.
 
-Si vous préférez essayer l'ouverture directe (**Ouvrir des URL** avec `https://queribus11.github.io/dori/?add=` suivi de *Texte dicté*), sachez que la phrase arrivera dans Safari : Dori l'y garde dans un bandeau « Dictée reçue dans Safari » avec un bouton **Copier** jusqu'à ce que vous l'ayez collée dans l'app ou ignorée. Rien n'est perdu, mais c'est un aller-retour de plus.
+Si vous préférez essayer l'ouverture directe (**Ouvrir des URL** avec `https://queribus11.github.io/Dori/?add=` suivi de *Texte dicté*), sachez que la phrase arrivera dans Safari : Dori l'y garde dans un bandeau « Dictée reçue dans Safari » avec un bouton **Copier** jusqu'à ce que vous l'ayez collée dans l'app ou ignorée. Rien n'est perdu, mais c'est un aller-retour de plus.
 
 **Automatisation du soir (18 h)** : dans Raccourcis → Automatisation → **Heure de la journée** 18:00, chaque jour, « Exécuter immédiatement » → action **Ouvrir l'app** → Dori. Le bouton « Préparer demain » est en haut d'Aujourd'hui. L'automatisation ne se lance que téléphone déverrouillé : ajoutez au besoin un rappel Rappels à 18 h 05 en filet.
 
 **Badge sur l'icône** : allez une fois dans Réglages → « Badge sur l'icône » → **Activer** et acceptez la demande d'autorisation. Sans cette étape, iOS n'affiche jamais le badge d'une app web.
+
+## Version 7.2 — l'icône Dori
+
+Nouvelle icône : « Dori » en Poppins sur fond citron vert, bulles corail et soleil, point du i corail. La variante inversée (fond encre kaki, lettres citron) est livrée en réserve sous les noms `icon-kaki-180/192/512.png` : pour l'adopter, renommez-les `icon-180/192/512.png` à la place des actuelles. Sur l'iPhone, l'icône de l'écran d'accueil ne se met pas à jour toute seule : supprimez l'ancienne (appui long → Supprimer le signet), rouvrez l'adresse dans Safari et refaites « Sur l'écran d'accueil ». Vos tâches sont conservées (elles sont attachées à l'adresse, pas à l'icône).
+
+Fichiers à remplacer : `icon-180.png`, `icon-192.png`, `icon-512.png`, `manifest.webmanifest`, `sw.js`, `index.html` (et à ajouter : `icon-kaki-*.png`).
 
 ## Version 7.1 — corrections des testeurs
 

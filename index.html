@@ -710,7 +710,7 @@ function render(){
   renderPills();
   const today=todayISO();
   const sj=view==='subject'&&subj(curSubject);const sjOpen=sj?S.tasks.filter(t=>t.client===curSubject&&!t.done):[];
-  const titles={subjects:['Sujets','Perso · Pro · par projet'],subject:[curSubject,sj?(sj.ctx==='perso'?'Perso':'Pro')+' · '+sjOpen.length+' tâche'+(sjOpen.length>1?'s':'')+(sjOpen.filter(isOverdue).length?' · '+sjOpen.filter(isOverdue).length+' en retard':'')+(sj.archived?' · archivé':''):''],today:['Aujourd\'hui',fmtLong(today)],matrix:['Matrice','Important vs urgent'],all:['Toutes',S.tasks.filter(t=>!t.done).length+' en cours'+(S.settings.client?' · @'+S.settings.client:'')],settings:['Réglages','Dori v7.1']};
+  const titles={subjects:['Sujets','Perso · Pro · par projet'],subject:[curSubject,sj?(sj.ctx==='perso'?'Perso':'Pro')+' · '+sjOpen.length+' tâche'+(sjOpen.length>1?'s':'')+(sjOpen.filter(isOverdue).length?' · '+sjOpen.filter(isOverdue).length+' en retard':'')+(sj.archived?' · archivé':''):''],today:['Aujourd\'hui',fmtLong(today)],matrix:['Matrice','Important vs urgent'],all:['Toutes',S.tasks.filter(t=>!t.done).length+' en cours'+(S.settings.client?' · @'+S.settings.client:'')],settings:['Réglages','Dori v7.2']};
   $('h-title').textContent=titles[view][0];$('h-sub').textContent=titles[view][1];
   const ha=$('h-action');ha.hidden=!(view==='today'||view==='subject');if(view==='subject'){ha.textContent='Modifier';ha.onclick=()=>openSubjectSheet(curSubject);}else{ha.textContent='Préparer demain';ha.onclick=()=>openTriage('evening');}
   $('h-back').hidden=view!=='subject';
