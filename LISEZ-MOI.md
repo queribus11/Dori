@@ -119,6 +119,12 @@ Si vous préférez essayer l'ouverture directe (**Ouvrir des URL** avec `https:/
 
 **Badge sur l'icône** : allez une fois dans Réglages → « Badge sur l'icône » → **Activer** et acceptez la demande d'autorisation. Sans cette étape, iOS n'affiche jamais le badge d'une app web.
 
+## Version 7.3 — mode clair / sombre
+
+Réglages → **Apparence** : Auto (suit l'iPhone), Clair ou Sombre. Le choix est mémorisé.
+
+Fichiers à remplacer : `index.html`, `theme.css`, `sw.js`.
+
 ## Version 7.2 — l'icône Dori
 
 Nouvelle icône : « Dori » en Poppins sur fond citron vert, bulles corail et soleil, point du i corail. La variante inversée (fond encre kaki, lettres citron) est livrée en réserve sous les noms `icon-kaki-180/192/512.png` : pour l'adopter, renommez-les `icon-180/192/512.png` à la place des actuelles. Sur l'iPhone, l'icône de l'écran d'accueil ne se met pas à jour toute seule : supprimez l'ancienne (appui long → Supprimer le signet), rouvrez l'adresse dans Safari et refaites « Sur l'écran d'accueil ». Vos tâches sont conservées (elles sont attachées à l'adresse, pas à l'icône).

@@ -211,3 +211,26 @@ nav .dot{background:var(--q1);right:16px;top:0;width:9px;height:9px;border:2px s
 .qa .ask .btn{border-color:var(--line)}
 header .back{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;color:var(--ink)}
 #s-lastexp{font-family:var(--body)}
+
+/* v7.3 : apparence forcée depuis Réglages (Auto suit l'iPhone) */
+html.light{color-scheme:light;--bg:#F3F0E8; --card:#FFFFFF; --text:#3B3F2A; --ink:#3B3F2A; --paper:#F3F0E8;
+  --muted:#5F6252; --line:#DAD6CB; --hi:#7CB518; --ontag:#FFFFFF; --ok:#7CB518;
+  --q1:#F0553D; --q1s:#FDE4E0;   /* Prioritaire : corail */
+  --q2:#9ACD1E; --q2s:#EFF7DB;   /* Important : citron vert */
+  --q3:#F5B301; --q3s:#FDF3D6;   /* Urgent : jaune soleil */
+  --q4:#3B6FA8; --q4s:#E0E8F1;   /* Affaires courantes : denim */
+  --wait:#3AA0F5; --waits:#DFF0FD; /* En attente : bleu ciel */
+  --client:#5E6142;        /* client : kaki du logo Azimut */
+  --accent:#3B3F2A; --accent-soft:#E8E6E0; --danger:#F0553D;
+  --shadow:none; --radius:10px; --stroke:1.5px;
+  --display:"Space Grotesk","SF Pro Display",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;}
+html.dark{color-scheme:dark;--bg:#121214; --card:#1B1B1F; --text:#F3F0E8; --ink:#C9CBBD; --paper:#121214;
+    --muted:#A6A49D; --line:#2F2F35; --hi:#9ACD1E; --ontag:#15151A; --ok:#7CB518;
+    --q1:#F48877; --q1s:#3A2622; --q2:#B8DC62; --q2s:#28321A; --q3:#F8CA4D; --q3s:#3A3116;
+    --q4:#769AC2; --q4s:#1E2A38; --wait:#75BCF8; --waits:#1C2F40; --client:#B9BBA8;
+    --accent:#C9CBBD; --accent-soft:#2A2A2E; --danger:#F48877;}
+html.dark .overlay{background:rgba(0,0,0,.65)}
+html.dark .task.done .chk svg{color:#15151A}
+html.light .overlay{background:rgba(0,0,0,.35)}
+html.light .task.done .chk svg{color:var(--ink)}

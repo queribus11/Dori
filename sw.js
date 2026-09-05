@@ -1,6 +1,6 @@
 // Service worker : rend l'app disponible hors ligne.
 // Changez la version à chaque mise à jour de l'app pour forcer le rafraîchissement du cache.
-const VERSION = 'dori-v7.2';
+const VERSION = 'dori-v7.3';
 const FILES = ['./', './index.html', './parser.js', './theme.css', './fonts/SpaceGrotesk.woff', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

@@ -262,6 +262,7 @@ header .back{display:block;font-size:.75rem;font-weight:700;color:var(--muted);m
 
   <section class="view" id="v-settings">
     <div class="card">
+      <div class="item"><div><label>Apparence</label><small>Auto suit le réglage de l'iPhone</small></div><div class="seg" id="s-theme"><button data-v="auto">Auto</button><button data-v="light">Clair</button><button data-v="dark">Sombre</button></div></div>
       <div class="item" id="s-badge-row" hidden><div><label>Badge sur l'icône</label><small>Autoriser les notifications une fois : Dori affiche le nombre de tâches du jour sur son icône</small></div><button class="btn ghost sm" id="s-badge">Activer</button></div>
       <div class="item"><div><label>Sauvegarde</label><small id="s-lastexp">Exporter toutes les tâches (fichier JSON)</small></div><button class="btn ghost sm" id="s-export">Exporter</button></div>
       <div class="item"><div><label>Restaurer</label><small>Importer un fichier de sauvegarde</small></div><button class="btn ghost sm" id="s-import">Importer</button><input type="file" id="s-file" accept=".json,application/json" hidden></div>
@@ -398,11 +399,11 @@ function normTask(t){
 function norm(d){
   d=d&&typeof d==='object'?d:blank();
   d.schema=3;
-  d.settings=Object.assign({client:'',lastExport:0,triagedOn:'',snoozedOn:'',eveningOn:'',memoOn:'',notedOpen:false},d.settings&&typeof d.settings==='object'?d.settings:{});
+  d.settings=Object.assign({client:'',lastExport:0,triagedOn:'',snoozedOn:'',eveningOn:'',memoOn:'',notedOpen:false,theme:'auto'},d.settings&&typeof d.settings==='object'?d.settings:{});
   {const s=d.settings;const numb=(v,lo,hi,dflt)=>{const n=Number(v);return isFinite(n)?Math.min(hi,Math.max(lo,n)):dflt;};
    for(const k of ['capacity','defaultDur','keepDays','autoUrgent','filter','capOpen'])delete s[k];
    s.client=typeof s.client==='string'?s.client:'';s.lastExport=numb(s.lastExport,0,9e15,0);
-   for(const k of ['triagedOn','snoozedOn','eveningOn','memoOn'])if(typeof s[k]!=='string')s[k]='';s.notedOpen=!!s.notedOpen;}
+   for(const k of ['triagedOn','snoozedOn','eveningOn','memoOn'])if(typeof s[k]!=='string')s[k]='';s.notedOpen=!!s.notedOpen;s.theme=['auto','light','dark'].includes(s.theme)?s.theme:'auto';}
   d.tasks=(Array.isArray(d.tasks)?d.tasks:[]).filter(t=>t&&typeof t==='object').map(normTask);
   /* sujets : { nom: {ctx, color, archived, collapsed:[]} } ; migration des anciens clients */
   d.subjects=d.subjects&&typeof d.subjects==='object'?d.subjects:{};
@@ -428,6 +429,9 @@ function save(){
   catch(e){toast('Sauvegarde impossible (espace plein ?)');}
 }
 S=load();save();
+function applyTheme(){const h=document.documentElement;h.classList.remove('light','dark');if(S.settings.theme!=='auto')h.classList.add(S.settings.theme);
+  const dark=S.settings.theme==='dark'||(S.settings.theme==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.setAttribute('content',dark?'#121214':'#F3F0E8'));}
+applyTheme();
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
 
 /* ================= logique métier ================= */
@@ -700,6 +704,7 @@ function renderAll(){
 }
 function renderSettings(){
   const s=S.settings;
+  $('s-theme').querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.v===s.theme);b.onclick=()=>{s.theme=b.dataset.v;save();applyTheme();renderSettings();};});
   {const row=$('s-badge-row');const can='Notification'in window&&!!navigator.setAppBadge;row.hidden=!(can&&Notification.permission!=='granted');
    if(!row.hidden)$('s-badge').onclick=async()=>{try{const r=await Notification.requestPermission();if(r==='granted'){toast('Badge activé');updateBadge();}else toast('Autorisation refusée : réactivable dans Réglages iPhone → Notifications → Dori');}catch(e){toast('Autorisation impossible ici');}renderSettings();};}const since=s.lastExport?Math.floor((Date.now()-s.lastExport)/864e5):null;
   const le=$('s-lastexp');le.textContent=s.lastExport?'Dernier export : '+new Date(s.lastExport).toLocaleDateString('fr-FR')+(since>=30?' — pensez-y':''):'Jamais exporté'+(S.tasks.length>=5?' — pensez-y':'');le.style.color=(since===null&&S.tasks.length>=5)||since>=30?'var(--q1)':'';
@@ -710,7 +715,7 @@ function render(){
   renderPills();
   const today=todayISO();
   const sj=view==='subject'&&subj(curSubject);const sjOpen=sj?S.tasks.filter(t=>t.client===curSubject&&!t.done):[];
-  const titles={subjects:['Sujets','Perso · Pro · par projet'],subject:[curSubject,sj?(sj.ctx==='perso'?'Perso':'Pro')+' · '+sjOpen.length+' tâche'+(sjOpen.length>1?'s':'')+(sjOpen.filter(isOverdue).length?' · '+sjOpen.filter(isOverdue).length+' en retard':'')+(sj.archived?' · archivé':''):''],today:['Aujourd\'hui',fmtLong(today)],matrix:['Matrice','Important vs urgent'],all:['Toutes',S.tasks.filter(t=>!t.done).length+' en cours'+(S.settings.client?' · @'+S.settings.client:'')],settings:['Réglages','Dori v7.2']};
+  const titles={subjects:['Sujets','Perso · Pro · par projet'],subject:[curSubject,sj?(sj.ctx==='perso'?'Perso':'Pro')+' · '+sjOpen.length+' tâche'+(sjOpen.length>1?'s':'')+(sjOpen.filter(isOverdue).length?' · '+sjOpen.filter(isOverdue).length+' en retard':'')+(sj.archived?' · archivé':''):''],today:['Aujourd\'hui',fmtLong(today)],matrix:['Matrice','Important vs urgent'],all:['Toutes',S.tasks.filter(t=>!t.done).length+' en cours'+(S.settings.client?' · @'+S.settings.client:'')],settings:['Réglages','Dori v7.3']};
   $('h-title').textContent=titles[view][0];$('h-sub').textContent=titles[view][1];
   const ha=$('h-action');ha.hidden=!(view==='today'||view==='subject');if(view==='subject'){ha.textContent='Modifier';ha.onclick=()=>openSubjectSheet(curSubject);}else{ha.textContent='Préparer demain';ha.onclick=()=>openTriage('evening');}
   $('h-back').hidden=view!=='subject';
