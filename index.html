@@ -715,7 +715,7 @@ function render(){
   renderPills();
   const today=todayISO();
   const sj=view==='subject'&&subj(curSubject);const sjOpen=sj?S.tasks.filter(t=>t.client===curSubject&&!t.done):[];
-  const titles={subjects:['Sujets','Perso · Pro · par projet'],subject:[curSubject,sj?(sj.ctx==='perso'?'Perso':'Pro')+' · '+sjOpen.length+' tâche'+(sjOpen.length>1?'s':'')+(sjOpen.filter(isOverdue).length?' · '+sjOpen.filter(isOverdue).length+' en retard':'')+(sj.archived?' · archivé':''):''],today:['Aujourd\'hui',fmtLong(today)],matrix:['Matrice','Important vs urgent'],all:['Toutes',S.tasks.filter(t=>!t.done).length+' en cours'+(S.settings.client?' · @'+S.settings.client:'')],settings:['Réglages','Dori v7.3']};
+  const titles={subjects:['Sujets','Perso · Pro · par projet'],subject:[curSubject,sj?(sj.ctx==='perso'?'Perso':'Pro')+' · '+sjOpen.length+' tâche'+(sjOpen.length>1?'s':'')+(sjOpen.filter(isOverdue).length?' · '+sjOpen.filter(isOverdue).length+' en retard':'')+(sj.archived?' · archivé':''):''],today:['Aujourd\'hui',fmtLong(today)],matrix:['Matrice','Important vs urgent'],all:['Toutes',S.tasks.filter(t=>!t.done).length+' en cours'+(S.settings.client?' · @'+S.settings.client:'')],settings:['Réglages','Dori v7.4']};
   $('h-title').textContent=titles[view][0];$('h-sub').textContent=titles[view][1];
   const ha=$('h-action');ha.hidden=!(view==='today'||view==='subject');if(view==='subject'){ha.textContent='Modifier';ha.onclick=()=>openSubjectSheet(curSubject);}else{ha.textContent='Préparer demain';ha.onclick=()=>openTriage('evening');}
   $('h-back').hidden=view!=='subject';
@@ -789,6 +789,8 @@ $('e-delete').onclick=()=>{if(!delArmed){delArmed=true;$('e-delete').textContent
 /* ================= saisie rapide ================= */
 const MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg>';
 const PASTE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>';
+const CLR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const STOP='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
 const GO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
 const parse=text=>parseTask(text,todayISO(),subjNames());
 function taskFromParse(p,defaults){
@@ -829,26 +831,33 @@ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 document.querySelectorAll('[data-qa]').forEach(box=>{
   const forToday=box.closest('#v-today')!==null;const forSubject=box.closest('#v-subject')!==null;
   box.innerHTML=`<div class="line"><input placeholder="Dicter ou écrire une tâche…" autocomplete="off" enterkeyhint="done" aria-label="Nouvelle tâche">
-    <button class="ib mic" aria-label="Dicter" ${SR?'':'hidden'}>${MIC}</button><button class="ib paste" aria-label="Coller">${PASTE}</button><button class="ib go" aria-label="Ajouter" disabled>${GO}</button></div><div class="prev"></div><div class="ask"></div>`;
-  const inp=box.querySelector('input'),prev=box.querySelector('.prev'),go=box.querySelector('.go'),mic=box.querySelector('.mic'),paste=box.querySelector('.paste');
+    <button class="ib clr" aria-label="Effacer" hidden>${CLR}</button><button class="ib mic" aria-label="Dicter" ${SR?'':'hidden'}>${MIC}</button><button class="ib paste" aria-label="Coller">${PASTE}</button><button class="ib go" aria-label="Ajouter" disabled>${GO}</button></div><div class="prev"></div><div class="ask"></div>`;
+  const inp=box.querySelector('input'),prev=box.querySelector('.prev'),go=box.querySelector('.go'),mic=box.querySelector('.mic'),paste=box.querySelector('.paste'),clr=box.querySelector('.clr');
   const defaults=()=>forSubject?({client:curSubject}):({client:S.settings.client||''});
   function preview(){
-    const v=inp.value.trim();go.disabled=!v;if(!v){prev.innerHTML='';return;}
+    const v=inp.value.trim();go.disabled=!v;clr.hidden=!inp.value;if(!v){prev.innerHTML='';return;}
     const p=parse(v);prev.innerHTML=previewChips(p,defaults());
   }
   inp.oninput=()=>{const a=box.querySelector('.ask');if(a&&a.innerHTML.trim()&&inp.value.trim()){a.innerHTML='';renderMemoIfToday();}preview();};
   const submit=()=>{const t=quickAdd(inp.value,defaults());if(t){inp.value='';preview();if(needsWhen(t))askWhen(box,t);}};
   go.onclick=submit;inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();submit();}};
   paste.onclick=async()=>{try{const t=await navigator.clipboard.readText();if(t&&/\n/.test(t.trim())){const last=quickAddLines(t,defaults());if(last&&needsWhen(last))askWhen(box,last);return;}if(t){inp.value=t.trim();preview();}inp.focus();}catch(e){toast('Appuyez longuement dans le champ puis « Coller »');inp.focus();}};
-  let rec=null;
+  /* Dictée : le bouton devient un carré « Arrêter » pendant l'écoute ; arrêt automatique après 2,5 s de silence ou 30 s au total */
+  let rec=null,silT=null,capT=null;
+  const stopRec=()=>{clearTimeout(silT);clearTimeout(capT);if(rec){try{rec.stop();}catch(_){}}};
+  const endRec=()=>{clearTimeout(silT);clearTimeout(capT);mic.classList.remove('on');mic.innerHTML=MIC;mic.setAttribute('aria-label','Dicter');rec=null;if(inp.value.trim())go.focus();};
   mic.onclick=()=>{
-    if(rec){rec.stop();return;}
-    rec=new SR();rec.lang='fr-FR';rec.interimResults=true;rec.continuous=false;let final='';mic.classList.add('on');
-    rec.onresult=e=>{let s='';for(const r of e.results){s+=r[0].transcript;if(r.isFinal)final=s;}inp.value=(final||s).trim();preview();};
-    rec.onerror=()=>{toast('Dictée indisponible : utilisez le micro du clavier');inp.focus();};
-    rec.onend=()=>{mic.classList.remove('on');rec=null;if(inp.value.trim())go.focus();};
-    try{rec.start();}catch(e){rec=null;mic.classList.remove('on');inp.focus();}
+    if(rec){stopRec();return;}
+    rec=new SR();rec.lang='fr-FR';rec.interimResults=true;rec.continuous=false;let final='';
+    mic.classList.add('on');mic.innerHTML=STOP;mic.setAttribute('aria-label','Arrêter la dictée');inp.placeholder='Je vous écoute… (appuyez sur le carré pour arrêter)';
+    const armSilence=()=>{clearTimeout(silT);silT=setTimeout(stopRec,2500);};
+    rec.onresult=e=>{let s='';for(const r of e.results){s+=r[0].transcript;if(r.isFinal)final=s;}inp.value=(final||s).trim();preview();armSilence();};
+    rec.onerror=ev=>{if(ev&&ev.error==='no-speech')return;toast('Dictée indisponible : utilisez le micro du clavier');inp.focus();};
+    rec.onend=()=>{inp.placeholder='Dicter ou écrire une tâche…';endRec();};
+    try{rec.start();silT=setTimeout(stopRec,6000);capT=setTimeout(stopRec,30000);}catch(e){inp.placeholder='Dicter ou écrire une tâche…';endRec();inp.focus();}
   };
+  go.addEventListener('click',()=>{if(rec)stopRec();},true);
+  clr.onclick=()=>{if(rec)stopRec();inp.value='';preview();inp.focus();};
 });
 
 

@@ -119,6 +119,12 @@ Si vous préférez essayer l'ouverture directe (**Ouvrir des URL** avec `https:/
 
 **Badge sur l'icône** : allez une fois dans Réglages → « Badge sur l'icône » → **Activer** et acceptez la demande d'autorisation. Sans cette étape, iOS n'affiche jamais le badge d'une app web.
 
+## Version 7.4 — la dictée s'arrête
+
+Pendant la dictée, le bouton micro devient un **carré corail « Arrêter »** ; un appui dessus (ou sur la flèche « Ajouter ») arrête l'écoute. L'écoute s'arrête aussi toute seule après 2,5 secondes de silence (6 s si rien n'a été dit), et au plus tard après 30 secondes. Une **croix « Effacer »** apparaît dans la barre dès qu'elle contient du texte : elle annule la saisie (et la dictée en cours) sans rien enregistrer.
+
+Fichiers à remplacer : `index.html`, `sw.js`.
+
 ## Version 7.3 — mode clair / sombre
 
 Réglages → **Apparence** : Auto (suit l'iPhone), Clair ou Sombre. Le choix est mémorisé.
